@@ -1,0 +1,11 @@
+  doubleclick to add in place
+  drop to move to place
+  edit metadata of element after holding it
+  tap child to focus completely
+  update breadcrumbs
+  clicking breadcrumbs refocuses
+  add child types:
+    TreeChart
+    Progress
+    Link
+    HTML
