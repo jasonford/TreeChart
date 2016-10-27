@@ -22,7 +22,15 @@ let TreeChart = React.createClass({
     //  add event listeners
     let self = this;
     this.refs.root.addEventListener('doubletap', function (event) {
-      self.addElement();
+      //  TODO: get index of child at position and before and after to choose index for new child
+      if (event.childPosition.x > 0.5) {
+        console.log('add right');
+        self.addElement(1);
+      }
+      else {
+        console.log('add left');
+        self.addElement(-1);
+      }
     });
   },
   addElement(index) {

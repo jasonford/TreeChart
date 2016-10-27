@@ -17,8 +17,16 @@ let TreeChartChild = React.createClass({
   componentDidMount: function () {
     let self = this;
     //  add event listeners
+    this.refs.root.addEventListener("doubletap", (event)=>{
+      //  send info about self to parent
+      event.childKey = self.state.element['.key'];
+      let br = self.refs.root.getBoundingClientRect();
+      event.childPosition = { //  normalized
+        x : (event.x - br.left) / br.width,
+        y : (event.y - br.top ) / br.height
+      };
+    });
     this.refs.root.addEventListener("dragone", (event)=>{
-      console.log('dragging')
       self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)'
     });
     this.refs.root.addEventListener("drop", (event)=>{
