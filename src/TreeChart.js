@@ -38,6 +38,7 @@ function makeRows(items) {
         columns : [],
         height : 0
       }
+      rows.push(currentRow);
     }
   });
   return rows;
@@ -47,16 +48,37 @@ let TreeChart = React.createClass({
   mixins : [ReactFireMixin],
   componentWillMount() {
     this.setState({
-      path : this.props.path
+      path : this.props.path,
+      element : { // start with empty element designed to show loading
+        elements : []
+      }
     });
-    let ref = firebase.database().ref(this.props.elementKey).orderByChild("index");
+    let ref = firebase.database().ref(this.props.elementKey);
     this.bindAsObject(ref, "element");
   },
   componentDidMount: function () {
     //  add event listeners
+    let self = this;
+    this.refs.root.addEventListener('doubletap', function (event) {
+      self.addElement();
+    });
+  },
+  addElement(index) {
+    index = index || 1;
+    if (this.state.element.elements) {
+      index = Object.keys(this.state.element.elements).length;
+    }
+    this.firebaseRefs.element.child('elements').push({
+      title : "",
+      index : index,
+      importance : 1,
+      elements : []
+    });
+  },
+  removeChild(key) {
+    firebase.database().ref(this.props.path + 'elements/' + key).remove();
   },
   render() {
-    if (!this.state.element) return <div>loading</div>;
     let self = this;
 
     //  ensure key is available
@@ -75,19 +97,23 @@ let TreeChart = React.createClass({
     rows.forEach((row, index)=>{
       childElements.push(
         <div
-          className="TreeChartDivider active"
+          className="TreeChartRowDivider"
           key={'divider/'+index}></div>);
 
       row.columns.forEach((column)=>{
+        function remove() {
+          self.removeChild(column.key);
+        }
         childElements.push(
           <TreeChartChild
             path={self.props.path + 'elements/' + column.key}
             key={column.key}
-            height={row.height}/>);
+            height={row.height}
+            remove={remove}/>);
       });
     });
 
-    return <div className="TreeChart">
+    return <div ref="root" className="TreeChart">
       <div className="TreeChartHeader">
         {this.props.isChild ? null : <BreadCrumbs path={this.state.path}/>}
       </div>
