@@ -61,6 +61,37 @@ let TreeChart = React.createClass({
       elements : []
     });
   },
+  moveChild(key, keyMoving, direction) {
+    let self = this;
+    let child = self.state.element.elements[key];
+    let orderedChildren = Object.values(self.state.element.elements).sort(function (a, b) {
+      return a.index - b.index;
+    });
+    let childIndex = orderedChildren.indexOf(child);
+    let updatedIndex = null;
+
+    if (direction > 0) {
+      if (childIndex < orderedChildren.length-1) {
+        updatedIndex = (child.index + orderedChildren[childIndex+1].index)/2;
+      }
+      else {
+        updatedIndex = child.index + 1;
+      }
+    }
+    else {
+      if (childIndex === 0) {
+        updatedIndex = child.index - 1;
+      }
+      else {
+        updatedIndex = (child.index + orderedChildren[childIndex-1].index)/2;
+      }
+    }
+
+    firebase.database().ref(this.props.path + 'elements/' + keyMoving).update({
+      index : updatedIndex
+    });
+
+  },
   removeChild(key) {
     firebase.database().ref(this.props.path + 'elements/' + key).remove();
   },
@@ -96,6 +127,7 @@ let TreeChart = React.createClass({
             path={self.props.path + 'elements/' + column.key}
             key={column.key}
             height={row.height}
+            move={self.moveChild}
             remove={remove}/>);
       });
     });

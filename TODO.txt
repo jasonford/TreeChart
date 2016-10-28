@@ -1,6 +1,6 @@
 X doubleclick to add in place
-  dropped event triggered on first element under dropped element that is not a parent of the dropped item
-  drop to move to place
+X dropped event triggered on first element under dropped element that is not a parent of the dropped item
+X drop to move to place
   edit metadata of element after holding it
   tap child to focus completely
   update breadcrumbs

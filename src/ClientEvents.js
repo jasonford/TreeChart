@@ -393,9 +393,12 @@ window.addEventListener("load", function () {
         });
         startTarget.dispatchEvent(swipeleftEvent);
       }
+      //  Data to share between drop and dropped targets
+      var targetData = {};
       var dropEvent = customEvent('drop', {
         x : lastX,
         y : lastY,
+        targetData : targetData,
         dx : lastX - startX,
         dy : lastY - startY,
         swiped : swiped
@@ -418,11 +421,12 @@ window.addEventListener("load", function () {
               var droppedEvent = customEvent('dropped', {
                 x : lastX,
                 y : lastY,
+                targetData : targetData,
                 dx : lastX - startX,
                 dy : lastY - startY,
                 swiped : swiped
               });
-              element.dispatchEvent(droppedEvent)
+              elementUnderCursor.dispatchEvent(droppedEvent)
             }
             //  undo the display="none" we did to get here
             hiddenElements.forEach(function (hiddenElement) {
