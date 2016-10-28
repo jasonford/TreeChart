@@ -401,6 +401,40 @@ window.addEventListener("load", function () {
         swiped : swiped
       });
       startTarget.dispatchEvent(dropEvent);
+      var hiddenElements = [];
+      //  disable events on currentTarget while it and its parent is under the event
+      //  so we can trigger a dropped event on the first element that is not an ancestor
+      function getDroppedElement(element, cb) {
+        element.style.display = "none";
+        hiddenElements.push(element);
+        requestAnimationFrame(function () {
+          var elementUnderCursor = document.elementFromPoint(lastX, lastY);
+          if (element.contains(elementUnderCursor)) {
+            getDroppedElement(element.parent, cb);
+          }
+          else {
+            if (element) {
+              //  dropped event on element
+              var droppedEvent = customEvent('dropped', {
+                x : lastX,
+                y : lastY,
+                dx : lastX - startX,
+                dy : lastY - startY,
+                swiped : swiped
+              });
+              element.dispatchEvent(droppedEvent)
+            }
+            //  undo the display="none" we did to get here
+            hiddenElements.forEach(function (hiddenElement) {
+              hiddenElement.style.display = null;
+            });
+          }
+        });
+      }
+      // get element not in path of given element and under drop
+      getDroppedElement(startTarget, function (element) {
+        console.log('drop on', element)
+      });
     });
   });
 });

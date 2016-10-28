@@ -12,7 +12,7 @@ let TreeChart = React.createClass({
     this.setState({
       path : this.props.path,
       element : { // start with empty element designed to show loading
-        elements : []
+        elements : {}
       }
     });
     let ref = firebase.database().ref(this.props.elementKey);
@@ -22,22 +22,38 @@ let TreeChart = React.createClass({
     //  add event listeners
     let self = this;
     this.refs.root.addEventListener('doubletap', function (event) {
-      //  TODO: get index of child at position and before and after to choose index for new child
-      if (event.childPosition.x > 0.5) {
-        console.log('add right');
-        self.addElement(1);
+      if (event.childKey) {
+        let child = self.state.element.elements[event.childKey];
+        let orderedChildren = Object.values(self.state.element.elements).sort(function (a, b) {
+          return a.index - b.index;
+        });
+        let childIndex = orderedChildren.indexOf(child);
+
+        if (event.childPosition.x > 0.5) {
+          if (childIndex === orderedChildren.length-1){
+            self.addElement(child.index + 1);
+          }
+          else {
+            //  add element between current element and the one after it
+            self.addElement((child.index + orderedChildren[childIndex+1].index)/2);
+          }
+        }
+        else {
+          if (childIndex === 0) {
+            self.addElement(child.index - 1);
+          }
+          else {
+            //  add element between current element and the one before it
+            self.addElement((child.index + orderedChildren[childIndex-1].index)/2);
+          }
+        }
       }
       else {
-        console.log('add left');
-        self.addElement(-1);
+        self.addElement(0);
       }
     });
   },
   addElement(index) {
-    index = index || 1;
-    if (this.state.element.elements) {
-      index = Object.keys(this.state.element.elements).length;
-    }
     this.firebaseRefs.element.child('elements').push({
       title : "",
       index : index,
@@ -52,11 +68,12 @@ let TreeChart = React.createClass({
     let self = this;
 
     //  ensure key is available
-    Object.keys(this.state.element.elements).forEach((key)=>{
+    Object.keys(this.state.element.elements || {}).forEach((key)=>{
       self.state.element.elements[key].key = key;
     });
 
-    let orderedChildren = Object.values(this.state.element.elements).sort(function (a, b) {
+    let orderedChildren = Object.values(this.state.element.elements || {})
+    .sort(function (a, b) {
       return a.index - b.index;
     });
 

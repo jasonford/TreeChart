@@ -46,8 +46,11 @@ let TreeChartChild = React.createClass({
       height : this.props.height
     };
     return <div ref="root" className="TreeChartChild" style={style}>
-      {style.flexGrow}
-    </div>;
+      <div className="TreeChartChildInner">
+        {this.state.element.index}<br/>
+        {this.state.element.importance}
+      </div>
+    </div>
   }
 });
 
