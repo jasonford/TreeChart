@@ -1,12 +1,17 @@
 X doubleclick to add in place
 X dropped event triggered on first element under dropped element that is not a parent of the dropped item
 X drop to move to place
-  edit metadata of element after holding it
-  tap child to focus completely
-  update breadcrumbs
+X edit metadata of element after holding it
+X tap child to focus completely
+X update breadcrumbs
   clicking breadcrumbs refocuses
   add child types:
     TreeChart
     Progress
     Link
     HTML
+  Child types preview renderings
+  animate all child transitions
+    remember screen locations and dimensions before DOM update
+    just after DOM update, apply dimensions and locations
+    add animation class and allow animation of dimensions and locations to current spots

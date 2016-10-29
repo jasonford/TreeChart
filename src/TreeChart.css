@@ -4,6 +4,7 @@
   flex-direction: column;
   width : 100%;
   height : 100%;
+  overflow: hidden;
 }
 
 .TreeChartHeader
@@ -25,11 +26,10 @@
 .TreeChartChild
 {
   flex-grow : 1;
-  background: rgba(0,0,0,0.1);
-  height : 30px;
   user-select : none;
   min-width : 1px;
   position: relative;
+  overflow: hidden;
 }
 
 .TreeChartRowDivider
@@ -42,8 +42,29 @@
 .TreeChartChildInner
 {
   position : absolute;
+  left : 1px;
+  top : 1px;
+  bottom : 1px;
+  right : 1px;
+  background : rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.TreeChartChildEditor
+{
+  position : absolute;
   left : 0;
   top : 0;
   bottom : 0;
   right : 0;
+  z-index : 1;
+  display : flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align : center;
+  background: rgba(0,0,0,0.1);
 }

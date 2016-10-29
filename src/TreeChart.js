@@ -3,6 +3,7 @@ import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 import BreadCrumbs from './BreadCrumbs.js';
 import TreeChartChild from './TreeChartChild.js';
+import TreeChartChildEditor from './TreeChartChildEditor.js';
 import makeRows from './makeRows.js'
 import './TreeChart.css';
 
@@ -11,6 +12,7 @@ let TreeChart = React.createClass({
   componentWillMount() {
     this.setState({
       path : this.props.path,
+      focus : false,
       element : { // start with empty element designed to show loading
         elements : {}
       }
@@ -21,7 +23,8 @@ let TreeChart = React.createClass({
   componentDidMount: function () {
     //  add event listeners
     let self = this;
-    this.refs.root.addEventListener('doubletap', function (event) {
+    //  hold left right or center to edit
+    this.refs.children.addEventListener('hold', function (event) {
       if (event.childKey) {
         let child = self.state.element.elements[event.childKey];
         let orderedChildren = Object.values(self.state.element.elements).sort(function (a, b) {
@@ -29,7 +32,7 @@ let TreeChart = React.createClass({
         });
         let childIndex = orderedChildren.indexOf(child);
 
-        if (event.childPosition.x > 0.5) {
+        if (event.childPosition.x > 0.77) {
           if (childIndex === orderedChildren.length-1){
             self.addElement(child.index + 1);
           }
@@ -38,7 +41,7 @@ let TreeChart = React.createClass({
             self.addElement((child.index + orderedChildren[childIndex+1].index)/2);
           }
         }
-        else {
+        else if (event.childPosition.x < 0.33) {
           if (childIndex === 0) {
             self.addElement(child.index - 1);
           }
@@ -47,9 +50,19 @@ let TreeChart = React.createClass({
             self.addElement((child.index + orderedChildren[childIndex-1].index)/2);
           }
         }
+        else {
+          self.setState({
+            editing : event.dataPath
+          });
+        }
       }
       else {
         self.addElement(0);
+      }
+    });
+    this.refs.children.addEventListener('tap', function (event) {
+      if (event.dataPath) {
+        self.setState({focus : event.dataPath});
       }
     });
   },
@@ -112,6 +125,8 @@ let TreeChart = React.createClass({
 
     let childElements = [];
 
+    let focusedChild = self.state.focus;
+
     rows.forEach((row, index)=>{
       childElements.push(
         <div
@@ -122,21 +137,34 @@ let TreeChart = React.createClass({
         function remove() {
           self.removeChild(column.key);
         }
+        let path = self.props.path + 'elements/' + column.key;
+        let visible = focusedChild === false || focusedChild === path;
+        let height = row.height;
+        if (focusedChild === path) {
+          height = '100%';
+        }
+
         childElements.push(
           <TreeChartChild
-            path={self.props.path + 'elements/' + column.key}
+            path={path}
             key={column.key}
-            height={row.height}
+            visible={visible}
+            height={height}
             move={self.moveChild}
             remove={remove}/>);
       });
     });
 
+    function stopEditing() {
+      self.setState({editing:false});
+    }
+
     return <div ref="root" className="TreeChart">
       <div className="TreeChartHeader">
-        {this.props.isChild ? null : <BreadCrumbs path={this.state.path}/>}
+        {this.props.isChild ? null : <BreadCrumbs path={this.state.focus || this.state.path}/>}
+        {this.state.editing ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
       </div>
-      <div className="TreeChartChildren">
+      <div ref="children" className="TreeChartChildren">
         {childElements}
       </div>
     </div>;

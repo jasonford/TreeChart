@@ -18,8 +18,9 @@ let TreeChartChild = React.createClass({
     let self = this;
     let key = self.state.element['.key'];
     //  add event listeners
-    this.refs.root.addEventListener("doubletap", (event)=>{
+    this.refs.root.addEventListener("hold", (event)=>{
       //  send info about self to parent
+      event.dataPath = self.props.path;
       event.childKey = key;
       let br = self.refs.root.getBoundingClientRect();
       event.childPosition = { //  normalized
@@ -30,6 +31,9 @@ let TreeChartChild = React.createClass({
     this.refs.root.addEventListener("dragone", (event)=>{
       self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)'
     });
+    this.refs.root.addEventListener("tap", (event)=>{
+      event.dataPath = self.props.path;
+    });
     this.refs.root.addEventListener("drop", (event)=>{
       self.refs.root.style.transform = 'translate(0px,0px)';
       //  TODO: high velocity off edge should trigger remove too
@@ -39,27 +43,37 @@ let TreeChartChild = React.createClass({
       ||  event.y < 0) {
         self.props.remove();
       }
-      event.targetData.key = key;
+      event.targetData.droppedData = self.props.path;
+      event.targetData.droppedKey = key;
     });
     this.refs.root.addEventListener("dropped", (event)=>{
-      let br = self.refs.root.getBoundingClientRect();
-      if ((event.x - br.left) / br.width > 0.5) {
-        self.props.move(key, event.targetData.key, 1);
-      }
-      else {
-        self.props.move(key, event.targetData.key, -1);
+      if (event.targetData.droppedKey) {
+        let br = self.refs.root.getBoundingClientRect();
+        if ((event.x - br.left) / br.width > 0.5) {
+          self.props.move(key, event.targetData.droppedKey, 1);
+        }
+        else {
+          self.props.move(key, event.targetData.droppedKey, -1);
+        }
       }
     });
   },
   render() {
-    var style = {
-      flexGrow : this.state.element.importance,
-      height : this.props.height
+    let style = {
+      flexGrow : 0,
+      height : 0
     };
+
+    if (this.props.visible) {
+      style = {
+        flexGrow : this.state.element.importance,
+        height : this.props.height
+      };
+    }
+
     return <div ref="root" className="TreeChartChild" style={style}>
       <div className="TreeChartChildInner">
-        {this.state.element.index}<br/>
-        {this.state.element.importance}
+        <div>{this.state.element.title}</div>
       </div>
     </div>
   }

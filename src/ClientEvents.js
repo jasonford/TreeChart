@@ -112,7 +112,7 @@ window.addEventListener("load", function () {
   });
 
   window.addEventListener('mousedown', function (startEvent) {
-    if (touchInterface) return;
+    if (touchInterface || startEvent.button === 2) return;
     var startTime = (new Date()).getTime();
     var x1 = startEvent.pageX;
     var y1 = startEvent.pageY;
@@ -312,6 +312,8 @@ window.addEventListener("load", function () {
 
 
   window.addEventListener('mousedown', function (startEvent) {
+    if (event.button === 2) return;
+
     var startTarget = startEvent.target;
     var startX = startEvent.pageX;
     var startY = startEvent.pageY;
