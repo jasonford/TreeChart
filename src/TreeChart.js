@@ -108,6 +108,9 @@ let TreeChart = React.createClass({
   removeChild(key) {
     firebase.database().ref(this.props.path + 'elements/' + key).remove();
   },
+  focus(path) {
+    this.setState({focus : path});
+  },
   render() {
     let self = this;
 
@@ -116,8 +119,7 @@ let TreeChart = React.createClass({
       self.state.element.elements[key].key = key;
     });
 
-    let orderedChildren = Object.values(this.state.element.elements || {})
-    .sort(function (a, b) {
+    let orderedChildren = Object.values(this.state.element.elements || {}).sort(function (a, b) {
       return a.index - b.index;
     });
 
@@ -138,7 +140,9 @@ let TreeChart = React.createClass({
           self.removeChild(column.key);
         }
         let path = self.props.path + 'elements/' + column.key;
-        let visible = focusedChild === false || focusedChild === path;
+        let visible = focusedChild === false
+                   || focusedChild === path
+                   || focusedChild === self.props.path; //  focusing on self
         let height = row.height;
         if (focusedChild === path) {
           height = '100%';
@@ -161,7 +165,7 @@ let TreeChart = React.createClass({
 
     return <div ref="root" className="TreeChart">
       <div className="TreeChartHeader">
-        {this.props.isChild ? null : <BreadCrumbs path={this.state.focus || this.state.path}/>}
+        {this.props.isChild ? null : <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>}
         {this.state.editing ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
       </div>
       <div ref="children" className="TreeChartChildren">
