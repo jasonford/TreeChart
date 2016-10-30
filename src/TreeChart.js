@@ -109,6 +109,7 @@ let TreeChart = React.createClass({
   },
   focus(path) {
     if (path) {
+      if (path === '//') path = '/';
       this.setState({focus : path});
     }
     return this.state.focus;

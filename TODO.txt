@@ -4,6 +4,7 @@ X drop to move to place
 X edit metadata of element after holding it
 X tap child to focus completely
 X update breadcrumbs
+X clicking breadcrumbs refocuses
   add child types:
 X   TreeChart
     Progress
@@ -12,7 +13,6 @@ X   TreeChart
     Copy
     Access
   child types preview renderings
-  clicking breadcrumbs refocuses
   animate all child transitions
     remember screen locations and dimensions before DOM update
     just after DOM update, apply dimensions and locations
