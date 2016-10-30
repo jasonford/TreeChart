@@ -74,7 +74,7 @@ let TreeChart = React.createClass({
       elements : []
     });
   },
-  moveChild(key, keyMoving, direction) {
+  moveChild(key, keyMoving, direction) {  //  move child at keyMoving before or after the child at key
     if (!this.state.element.elements[key]) {
       throw new Error('attemted to move a child to one that does not exist');
     }
@@ -108,7 +108,6 @@ let TreeChart = React.createClass({
     firebase.database().ref(this.props.path + '/elements/' + keyMoving).update({
       index : updatedIndex
     });
-
   },
   removeChild(key) {
     firebase.database().ref(this.props.path + '/elements/' + key).remove();
@@ -176,9 +175,9 @@ let TreeChart = React.createClass({
     return <div ref="root" className="TreeChart">
       <div className="TreeChartHeader">
         {this.props.isChild ? null : <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>}
-        {this.state.editing ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
       </div>
       <div ref="children" className="TreeChartChildren">
+        {this.state.editing ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
         {childElements}
       </div>
     </div>;

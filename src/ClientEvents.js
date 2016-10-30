@@ -329,7 +329,7 @@ window.addEventListener("load", function () {
                 dy : lastY - startY,
                 swiped : swiped
               });
-              elementUnderCursor.dispatchEvent(droppedEvent)
+              if (elementUnderCursor) elementUnderCursor.dispatchEvent(droppedEvent)
             }
             //  undo the display="none" we did to get here
             hiddenElements.forEach(function (hiddenElement) {
@@ -461,7 +461,7 @@ window.addEventListener("load", function () {
                 dy : lastY - startY,
                 swiped : swiped
               });
-              elementUnderCursor.dispatchEvent(droppedEvent)
+              if (elementUnderCursor) elementUnderCursor.dispatchEvent(droppedEvent);
             }
             //  undo the display="none" we did to get here
             hiddenElements.forEach(function (hiddenElement) {
