@@ -301,12 +301,45 @@ window.addEventListener("load", function () {
         });
         endEvent.target.dispatchEvent(swipeleftEvent);
       }
+      var targetData = {};
       var dropEvent = customEvent('drop', {
         dx : lastX,
         dy : lastY,
+        targetData : targetData,
         swiped : swiped
       });
       startEvent.target.dispatchEvent(dropEvent);
+      let hiddenElements = [];
+      function getDroppedElement(element) {
+        element.style.display = "none";
+        hiddenElements.push(element);
+        requestAnimationFrame(function () {
+          var elementUnderCursor = document.elementFromPoint(lastX, lastY);
+          if (element.contains(elementUnderCursor)) {
+            getDroppedElement(element.parent);
+          }
+          else {
+            if (element) {
+              //  dropped event on element
+              var droppedEvent = customEvent('dropped', {
+                x : lastX,
+                y : lastY,
+                targetData : targetData,
+                dx : lastX - startX,
+                dy : lastY - startY,
+                swiped : swiped
+              });
+              elementUnderCursor.dispatchEvent(droppedEvent)
+            }
+            //  undo the display="none" we did to get here
+            hiddenElements.forEach(function (hiddenElement) {
+              hiddenElement.style.display = null;
+            });
+          }
+        });
+      }
+      // get element not in path of given element and under drop
+      getDroppedElement(startEvent.target);
     });
   });
 
@@ -409,13 +442,13 @@ window.addEventListener("load", function () {
       var hiddenElements = [];
       //  disable events on currentTarget while it and its parent is under the event
       //  so we can trigger a dropped event on the first element that is not an ancestor
-      function getDroppedElement(element, cb) {
+      function getDroppedElement(element) {
         element.style.display = "none";
         hiddenElements.push(element);
         requestAnimationFrame(function () {
           var elementUnderCursor = document.elementFromPoint(lastX, lastY);
           if (element.contains(elementUnderCursor)) {
-            getDroppedElement(element.parent, cb);
+            getDroppedElement(element.parent);
           }
           else {
             if (element) {
@@ -438,9 +471,7 @@ window.addEventListener("load", function () {
         });
       }
       // get element not in path of given element and under drop
-      getDroppedElement(startTarget, function (element) {
-        console.log('drop on', element)
-      });
+      getDroppedElement(startTarget);
     });
   });
 });
