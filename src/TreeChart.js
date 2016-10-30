@@ -12,7 +12,7 @@ let TreeChart = React.createClass({
   componentWillMount() {
     this.setState({
       path : this.props.path,
-      focus : false,
+      focus : this.props.path,
       element : { // start with empty element designed to show loading
         elements : {}
       }
@@ -61,12 +61,6 @@ let TreeChart = React.createClass({
         self.addElement(0);
       }
     });
-    this.refs.children.addEventListener('tap', function (event) {
-      event.stopPropagation();
-      if (event.dataPath) {
-        self.setState({focus : event.dataPath});
-      }
-    });
     //  stop propagation between layers
     this.refs.root.addEventListener('dropped', function (event) {
       event.stopPropagation();
@@ -74,7 +68,7 @@ let TreeChart = React.createClass({
   },
   addElement(index) {
     this.firebaseRefs.element.child('elements').push({
-      title : "",
+      title : "New Element",
       index : index,
       importance : 1,
       elements : []
@@ -114,7 +108,10 @@ let TreeChart = React.createClass({
     firebase.database().ref(this.props.path + '/elements/' + key).remove();
   },
   focus(path) {
-    this.setState({focus : path});
+    if (path) {
+      this.setState({focus : path});
+    }
+    return this.state.focus;
   },
   render() {
     let self = this;
@@ -132,7 +129,7 @@ let TreeChart = React.createClass({
 
     let childElements = [];
 
-    let focusedChild = self.state.focus;
+    let focusedChild = self.props.focus ? self.props.focus() : self.focus();
 
     rows.forEach((row, index)=>{
       childElements.push(
@@ -145,11 +142,10 @@ let TreeChart = React.createClass({
           self.removeChild(column.key);
         }
         let path = self.props.path + '/elements/' + column.key;
-        let visible = focusedChild === false
-                   || focusedChild === path
-                   || focusedChild === self.props.path; //  focusing on self
+        let visible = focusedChild === self.props.path || focusedChild.indexOf(path) === 0; //  this one parent of focused child
+
         let height = row.height;
-        if (focusedChild === path) {
+        if (focusedChild && focusedChild.indexOf(path) === 0) {
           height = '100%';
         }
 
@@ -159,7 +155,8 @@ let TreeChart = React.createClass({
             key={column.key}
             visible={visible}
             height={height}
-            focused={focusedChild === path}
+            focus={self.props.focus || self.focus} // pass back focus
+            focused={focusedChild && focusedChild.indexOf(path) === 0}
             move={self.moveChild}
             remove={remove}/>);
       });

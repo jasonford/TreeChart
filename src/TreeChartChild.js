@@ -35,7 +35,8 @@ let TreeChartChild = React.createClass({
       self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)'
     });
     this.refs.root.addEventListener("tap", (event)=>{
-      event.dataPath = self.props.path;
+      event.stopPropagation();
+      self.props.focus(self.props.path);
     });
     this.refs.root.addEventListener("drop", (event)=>{
       event.stopPropagation();
@@ -79,7 +80,7 @@ let TreeChartChild = React.createClass({
     let content;
 
     if (this.props.focused) {
-      content = <TreeChart path={this.props.path} isChild={true}/>
+      content = <TreeChart path={this.props.path} isChild={true} focus={this.props.focus}/>
     }
 
     return <div ref="root" className="TreeChartChild" style={style}>

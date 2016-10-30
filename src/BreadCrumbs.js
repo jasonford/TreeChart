@@ -5,9 +5,9 @@ import ReactFireMixin from 'reactfire';
 let BreadCrumbs = React.createClass({
   render() {
     let crumbs = [<BreadCrumb key='/' path='/' root={true} focus={this.props.focus}/>];
-    let pathParts = this.props.path.replace(/^\/|\/$/, '').split('/');
+    let pathParts = this.props.path.replace(/^\/+|\/+$/, '').split('/');
     for (let i=0; i<pathParts.length-1; i+=2) {
-      let currentPath = pathParts.slice(0, i+2).join('/');
+      let currentPath = '/'+pathParts.slice(0, i+2).join('/');
       crumbs.push(<BreadCrumb key={currentPath} path={currentPath} focus={this.props.focus}/>);
     }
     return <div>{crumbs}</div>;
@@ -24,7 +24,7 @@ let BreadCrumb = React.createClass({
   componentDidMount: function () {
     let self = this;
     self.refs.root.addEventListener('tap', (event)=>{
-      self.props.focus(self.props.path);
+      self.props.focus('/' + self.props.path);
     });
   },
   render() {
