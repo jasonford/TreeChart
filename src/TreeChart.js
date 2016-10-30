@@ -75,6 +75,12 @@ let TreeChart = React.createClass({
     });
   },
   moveChild(key, keyMoving, direction) {
+    if (!this.state.element.elements[key]) {
+      throw new Error('attemted to move a child to one that does not exist');
+    }
+    if (!this.state.element.elements[keyMoving]) {
+      throw new Error('attemted to move a child that does not exist');
+    }
     let self = this;
     let child = self.state.element.elements[key];
     let orderedChildren = Object.values(self.state.element.elements).sort(function (a, b) {

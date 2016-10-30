@@ -7,9 +7,9 @@ X update breadcrumbs
 X clicking breadcrumbs refocuses
   add child types:
 X   TreeChart
+    HTML
     Progress
     Link
-    HTML
     Copy
     Access
   child types preview renderings
