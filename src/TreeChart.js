@@ -17,7 +17,7 @@ let TreeChart = React.createClass({
         elements : {}
       }
     });
-    let ref = firebase.database().ref(this.props.elementKey);
+    let ref = firebase.database().ref(this.props.path);
     this.bindAsObject(ref, "element");
   },
   componentDidMount: function () {
@@ -25,6 +25,7 @@ let TreeChart = React.createClass({
     let self = this;
     //  hold left right or center to edit
     this.refs.children.addEventListener('hold', function (event) {
+      event.stopPropagation();
       if (event.childKey) {
         let child = self.state.element.elements[event.childKey];
         let orderedChildren = Object.values(self.state.element.elements).sort(function (a, b) {
@@ -32,7 +33,7 @@ let TreeChart = React.createClass({
         });
         let childIndex = orderedChildren.indexOf(child);
 
-        if (event.childPosition.x > 0.77) {
+        if (event.childPosition.x > 0.67) {
           if (childIndex === orderedChildren.length-1){
             self.addElement(child.index + 1);
           }
@@ -61,9 +62,14 @@ let TreeChart = React.createClass({
       }
     });
     this.refs.children.addEventListener('tap', function (event) {
+      event.stopPropagation();
       if (event.dataPath) {
         self.setState({focus : event.dataPath});
       }
+    });
+    //  stop propagation between layers
+    this.refs.root.addEventListener('dropped', function (event) {
+      event.stopPropagation();
     });
   },
   addElement(index) {
@@ -99,14 +105,13 @@ let TreeChart = React.createClass({
         updatedIndex = (child.index + orderedChildren[childIndex-1].index)/2;
       }
     }
-
-    firebase.database().ref(this.props.path + 'elements/' + keyMoving).update({
+    firebase.database().ref(this.props.path + '/elements/' + keyMoving).update({
       index : updatedIndex
     });
 
   },
   removeChild(key) {
-    firebase.database().ref(this.props.path + 'elements/' + key).remove();
+    firebase.database().ref(this.props.path + '/elements/' + key).remove();
   },
   focus(path) {
     this.setState({focus : path});
@@ -139,7 +144,7 @@ let TreeChart = React.createClass({
         function remove() {
           self.removeChild(column.key);
         }
-        let path = self.props.path + 'elements/' + column.key;
+        let path = self.props.path + '/elements/' + column.key;
         let visible = focusedChild === false
                    || focusedChild === path
                    || focusedChild === self.props.path; //  focusing on self
@@ -154,6 +159,7 @@ let TreeChart = React.createClass({
             key={column.key}
             visible={visible}
             height={height}
+            focused={focusedChild === path}
             move={self.moveChild}
             remove={remove}/>);
       });

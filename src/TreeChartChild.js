@@ -1,6 +1,7 @@
 import React from 'react';
 import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
+import TreeChart from './TreeChart.js';
 
 let TreeChartChild = React.createClass({
   mixins : [ReactFireMixin],
@@ -29,12 +30,15 @@ let TreeChartChild = React.createClass({
       };
     });
     this.refs.root.addEventListener("dragone", (event)=>{
+      event.stopPropagation();
+      if (self.props.focused) return;
       self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)'
     });
     this.refs.root.addEventListener("tap", (event)=>{
       event.dataPath = self.props.path;
     });
     this.refs.root.addEventListener("drop", (event)=>{
+      event.stopPropagation();
       self.refs.root.style.transform = 'translate(0px,0px)';
       //  TODO: high velocity off edge should trigger remove too
       if (event.x > window.innerWidth
@@ -47,6 +51,7 @@ let TreeChartChild = React.createClass({
       event.targetData.droppedKey = key;
     });
     this.refs.root.addEventListener("dropped", (event)=>{
+      event.stopPropagation();
       if (event.targetData.droppedKey) {
         let br = self.refs.root.getBoundingClientRect();
         if ((event.x - br.left) / br.width > 0.5) {
@@ -71,9 +76,15 @@ let TreeChartChild = React.createClass({
       };
     }
 
+    let content;
+
+    if (this.props.focused) {
+      content = <TreeChart path={this.props.path} isChild={true}/>
+    }
+
     return <div ref="root" className="TreeChartChild" style={style}>
       <div className="TreeChartChildInner">
-        <div>{this.state.element.title}</div>
+        {this.props.focused ? content : <div className="TreeChartChildTitle">{this.state.element.title}</div>}
       </div>
     </div>
   }

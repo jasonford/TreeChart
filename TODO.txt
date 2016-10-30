@@ -5,7 +5,7 @@ X edit metadata of element after holding it
 X tap child to focus completely
 X update breadcrumbs
   add child types:
-    TreeChart
+X   TreeChart
     Progress
     Link
     HTML
