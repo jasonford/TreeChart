@@ -7,12 +7,18 @@ X update breadcrumbs
 X clicking breadcrumbs refocuses
   add child types:
 X   TreeChart
+    Create your own child type to use (need a good interface)
+      - accepted child types can be used by anyone!
     HTML
     Progress
     Link
     Copy
     Access
 X child types preview renderings
+  dropping in middle of child copies element into the children of that element
+  dropping on a breadcrumb copies dropped element into that parent
+  touch screen support
+  styling
   animate all child transitions
     remember screen locations and dimensions before DOM update
     just after DOM update, apply dimensions and locations
