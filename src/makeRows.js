@@ -25,7 +25,7 @@ function makeRows(items) {
 
     //  decide to advance to next row or not
     //  biased toward accepting more on a row (screens usually wider than tall)
-    if (currentRow.importance > averageRowImportance && index < items.length - 1) {
+    if (currentRow.importance >= averageRowImportance && index < items.length - 1) {
       currentRow = {
         importance : 0,
         columns : [],
