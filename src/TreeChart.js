@@ -148,7 +148,7 @@ let TreeChart = React.createClass({
           self.removeChild(column.key);
         }
         let path = self.props.path + '/elements/' + column.key;
-        let visible = focusedChild === self.props.path || focusedChild.indexOf(path) === 0; //  this one parent of focused child
+        let visible = self.props.preview || focusedChild === self.props.path || focusedChild.indexOf(path) === 0; //  this one parent of focused child
 
         let height = row.height;
         if (focusedChild && focusedChild.indexOf(path) === 0) {
@@ -160,6 +160,7 @@ let TreeChart = React.createClass({
             path={path}
             key={column.key}
             visible={visible}
+            preview={self.props.preview}
             height={height}
             focus={self.props.focus || self.focus} // pass back focus
             focused={focusedChild && focusedChild.indexOf(path) === 0}

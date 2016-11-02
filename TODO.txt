@@ -12,7 +12,7 @@ X   TreeChart
     Link
     Copy
     Access
-  child types preview renderings
+X child types preview renderings
   animate all child transitions
     remember screen locations and dimensions before DOM update
     just after DOM update, apply dimensions and locations

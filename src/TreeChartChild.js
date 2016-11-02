@@ -77,15 +77,22 @@ let TreeChartChild = React.createClass({
       };
     }
 
-    let content = <div className="TreeChartChildTitle">{this.state.element.title}</div>;
-
+    let content;
     if (this.props.focused) {
-      content = <TreeChart path={this.props.path} isChild={true} focus={this.props.focus}/>
+      content = <div className="TreeChartChildTitle">
+        <TreeChart path={this.props.path} isChild={true} focus={this.props.focus} />
+      </div>
+    }
+    else {
+      content = <div className="TreeChartChildTitle">
+        <TreeChart path={this.props.path} preview={true} isChild={true} focus={this.props.focus} />
+      </div>
     }
 
     return <div ref="root" className="TreeChartChild" style={style}>
       <div className="TreeChartChildInner">
         {content}
+        {this.props.focused || this.props.preview ? null : <div className="TreeChartChildTitle">{this.state.element.title}</div>}
       </div>
     </div>
   }
