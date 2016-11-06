@@ -10,7 +10,7 @@ let BreadCrumbs = React.createClass({
       let currentPath = '/'+pathParts.slice(0, i+2).join('/');
       crumbs.push(<BreadCrumb key={currentPath} path={currentPath} focus={this.props.focus}/>);
     }
-    return <div>{crumbs}</div>;
+    return <div className="BreadCrumbs">{crumbs}</div>;
   }
 });
 
@@ -31,7 +31,7 @@ let BreadCrumb = React.createClass({
     if (this.props.root) {
       return <span ref="root">{this.state.element ? this.state.element.owner : ''}</span>
     }
-    return <span ref="root"> &gt; {this.state.element ? this.state.element.title || 'untitled' : ''}</span>;
+    return <span ref="root">/{this.state.element ? this.state.element.title || 'untitled' : ''}</span>;
   }
 })
 

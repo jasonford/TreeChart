@@ -4,7 +4,8 @@ import ReactFireMixin from 'reactfire';
 import BreadCrumbs from './BreadCrumbs.js';
 import TreeChartChild from './TreeChartChild.js';
 import TreeChartChildEditor from './TreeChartChildEditor.js';
-import makeRows from './makeRows.js'
+import makeRows from './makeRows.js';
+import Keyboard from './Keyboard.js';
 import './TreeChart.css';
 
 let TreeChart = React.createClass({
@@ -64,6 +65,28 @@ let TreeChart = React.createClass({
     //  stop propagation between layers
     this.refs.root.addEventListener('dropped', function (event) {
       event.stopPropagation();
+    });
+
+    Keyboard.onPress('.', function (pressed) {
+      let focusedChild = self.props.focus ? self.props.focus() : self.focus();
+      if (self.props.path === focusedChild) {
+        let elementTitleMatches = [];
+        Object.keys(self.state.element.elements).forEach((key)=>{
+          let element = self.state.element.elements[key];
+          if (element.title.indexOf(pressed) === 0) {
+            elementTitleMatches.push(key);
+          }
+        });
+        if (elementTitleMatches.length === 1) {
+          let path = self.props.path + '/elements/' + elementTitleMatches[0];
+          if (self.props.focus) {
+            self.props.focus(path);
+          }
+          else {
+            self.focus(path);
+          }
+        }
+      }
     });
   },
   addElement(index) {
@@ -137,13 +160,13 @@ let TreeChart = React.createClass({
 
     let focusedChild = self.props.focus ? self.props.focus() : self.focus();
 
-    rows.forEach((row, index)=>{
+    rows.forEach((row, rowIndex)=>{
       childElements.push(
         <div
           className="TreeChartRowDivider"
-          key={'divider/'+index}></div>);
+          key={'divider/'+rowIndex}></div>);
 
-      row.columns.forEach((column)=>{
+      row.columns.forEach((column, columnIndex)=>{
         function remove() {
           self.removeChild(column.key);
         }
@@ -155,11 +178,19 @@ let TreeChart = React.createClass({
           height = '100%';
         }
 
+        let location = {
+          top :  rowIndex === 0,
+          left : columnIndex === 0,
+          right : columnIndex === row.columns.length-1,
+          bottom : rowIndex === rows.length-1
+        };
+
         childElements.push(
           <TreeChartChild
             path={path}
             key={column.key}
             visible={visible}
+            location={location}
             preview={self.props.preview}
             height={height}
             focus={self.props.focus || self.focus} // pass back focus

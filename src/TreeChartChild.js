@@ -32,7 +32,8 @@ let TreeChartChild = React.createClass({
     this.refs.root.addEventListener("dragone", (event)=>{
       event.stopPropagation();
       if (self.props.focused) return;
-      self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)'
+      self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)';
+      self.refs.root.style.zIndex = 1;
     });
     this.refs.root.addEventListener("tap", (event)=>{
       event.stopPropagation();
@@ -41,6 +42,7 @@ let TreeChartChild = React.createClass({
     this.refs.root.addEventListener("drop", (event)=>{
       event.stopPropagation();
       self.refs.root.style.transform = 'translate(0px,0px)';
+      self.refs.root.style.zIndex = 0;
       //  TODO: high velocity off edge should trigger remove too
       if (event.x > window.innerWidth
       ||  event.y > window.innerHeight
@@ -77,14 +79,20 @@ let TreeChartChild = React.createClass({
       };
     }
 
+    let titleClasses = "TreeChartChildTitle";
+    if (this.props.location.top   ) titleClasses += " Top";
+    if (this.props.location.left  ) titleClasses += " Left";
+    if (this.props.location.right ) titleClasses += " Right";
+    if (this.props.location.bottom) titleClasses += " Bottom";
+
     let content;
     if (this.props.focused) {
-      content = <div className="TreeChartChildTitle">
+      content = <div className={titleClasses}>
         <TreeChart path={this.props.path} isChild={true} focus={this.props.focus} />
       </div>
     }
     else {
-      content = <div className="TreeChartChildTitle">
+      content = <div className={titleClasses}>
         <TreeChart path={this.props.path} preview={true} isChild={true} focus={this.props.focus} />
       </div>
     }

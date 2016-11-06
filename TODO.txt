@@ -15,11 +15,16 @@ X   TreeChart
     Copy
     Access
 X child types preview renderings
-  dropping in middle of child copies element into the children of that element
-  dropping on a breadcrumb copies dropped element into that parent
+  dropping in middle of child copies element into that element
+  dropping on a breadcrumb copies dropped element into that parent (or copies within current)
+  removing adds elements to removed stack
   touch screen support
   styling
   animate all child transitions
-    remember screen locations and dimensions before DOM update
+    remember screen locations and dimensions of child elements elements before DOM update
     just after DOM update, apply dimensions and locations
-    add animation class and allow animation of dimensions and locations to current spots
+    add animation class to allow animation of dimensions and locations to current spots
+
+Nice features:
+  typing outside of input selects child in current view that starts with that title
+  home page is just alphabet tree to usernames (usernames are restricted to non-dictionary words, dictionary words are reserved for collections)

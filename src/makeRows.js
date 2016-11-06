@@ -6,7 +6,7 @@ function makeRows(items) {
   });
 
   //  for a square viewport, ideally a the square of the total importance will be the average importance of a row
-  let averageRowImportance = Math.pow(totalImportance, 1/2)
+  let averageRowImportance = Math.pow(totalImportance, 1/2);
 
   let currentRow = {
     importance : 0,
