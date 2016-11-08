@@ -9,6 +9,8 @@
   bottom : 0;
   overflow: hidden;
   background: rgba(128,128,128,0.05);
+  color : #444444;
+  font-family: Helvetica, sans-serif;
 }
 
 .TreeChartHeader
@@ -25,6 +27,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items : center;
 }
 
 .TreeChartChild

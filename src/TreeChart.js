@@ -67,18 +67,31 @@ let TreeChart = React.createClass({
       event.stopPropagation();
     });
 
-    Keyboard.onPress('.', function (pressed) {
+    //  pressing first letter of 
+    Keyboard.onPress('.', function (e) {
+      let path;
       let focusedChild = self.props.focus ? self.props.focus() : self.focus();
       if (self.props.path === focusedChild) {
-        let elementTitleMatches = [];
-        Object.keys(self.state.element.elements).forEach((key)=>{
-          let element = self.state.element.elements[key];
-          if (element.title.indexOf(pressed) === 0) {
-            elementTitleMatches.push(key);
+        if (e.pressed === 8) {
+          path = self.props.path.split('/');
+          path.pop();
+          path.pop();
+          path = path.join('/');
+        }
+        else {
+          let elementTitleMatches = [];
+          Object.keys(self.state.element.elements || {}).forEach((key)=>{
+            let element = self.state.element.elements[key];
+            if (element.title.toLowerCase().indexOf(e.pressed.toLowerCase()) === 0) {
+              elementTitleMatches.push(key);
+            }
+          });
+          if (elementTitleMatches.length === 1) {
+            path = self.props.path + '/elements/' + elementTitleMatches[0];
           }
-        });
-        if (elementTitleMatches.length === 1) {
-          let path = self.props.path + '/elements/' + elementTitleMatches[0];
+        }
+
+        if (path) {
           if (self.props.focus) {
             self.props.focus(path);
           }
@@ -86,6 +99,7 @@ let TreeChart = React.createClass({
             self.focus(path);
           }
         }
+        e.stopPropagation();
       }
     });
   },
@@ -209,7 +223,7 @@ let TreeChart = React.createClass({
         {this.props.isChild ? null : <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>}
       </div>
       <div ref="children" className="TreeChartChildren">
-        {this.state.editing ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
+        {this.state.editing && !this.props.preview ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
         {childElements}
       </div>
     </div>;

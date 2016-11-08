@@ -4,11 +4,44 @@ let pressedKeys = '';
 
 document.body.addEventListener('keypress', function (e) {
   pressedKeys += e.key;
+  let handlers = [];
   pressedEvents.forEach((pressHandlers)=>{
     //  if pattern matches press handler
-    pressHandlers.handler(pressedKeys);
+    handlers.push(pressHandlers.handler);
   });
+  let stop = false;
+  let event = {
+    pressed : pressedKeys,
+    stopPropagation : ()=>{
+      stop = true;
+    }
+  }
+  while (!stop && handlers.length && !handlers.pop()(event)) {}
   pressedKeys = '';
+});
+
+let onlyKeyDownKeys = {
+  'Backspace' : 8
+};
+
+document.body.addEventListener('keydown', function (e) {
+  if (onlyKeyDownKeys[e.key]) {
+    pressedKeys += e.key;
+    let handlers = [];
+    pressedEvents.forEach((pressHandlers)=>{
+      //  if pattern matches press handler
+      handlers.push(pressHandlers.handler);
+    });
+    let stop = false;
+    let event = {
+      pressed : onlyKeyDownKeys[e.key],
+      stopPropagation : ()=>{
+        stop = true;
+      }
+    }
+    while (!stop && handlers.length && !handlers.pop()(event)) {}
+    pressedKeys = '';
+  }
 });
 
 let Keyboard = {
