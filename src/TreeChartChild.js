@@ -100,7 +100,7 @@ let TreeChartChild = React.createClass({
     return <div ref="root" className="TreeChartChild" style={style}>
       <div className="TreeChartChildInner">
         {content}
-        {this.props.focused || this.props.preview ? null : <div className="TreeChartChildTitle">{this.state.element.title}</div>}
+        {this.props.focused || this.props.preview ? null : <div className="TreeChartChildTitle">{this.state.element.title || this.props.childIndex+1}</div>}
       </div>
     </div>
   }

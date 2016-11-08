@@ -9,10 +9,17 @@ X child types preview renderings
 
 
 order from below:
-1 email auth user
-2 username reachable from typing into homescreen
+  progress metadata
+  note metadata
+  email auth user
+  username reachable from typing into homescreen
 
-
+Metadata for each node:
+X title
+X importance
+X type
+  progress
+  notes
 
 
 Core ideas:
@@ -46,9 +53,7 @@ Nice features:
 Child types:
 X TreeChart
   Create your own child type to use (need a good interface)
-    - accepted child types can be used by anyone!
-  HTML
-  Progress
+    - accepted child types can be used by anyone!  HTML
   Link -> opens in another frame after animating open
   Copy
   Access

@@ -82,7 +82,7 @@ let TreeChart = React.createClass({
           let elementTitleMatches = [];
           Object.keys(self.state.element.elements || {}).forEach((key)=>{
             let element = self.state.element.elements[key];
-            if (element.title.toLowerCase().indexOf(e.pressed.toLowerCase()) === 0) {
+            if (element.title && element.title.toLowerCase().indexOf(e.pressed.toLowerCase()) === 0) {
               elementTitleMatches.push(key);
             }
           });
@@ -105,9 +105,11 @@ let TreeChart = React.createClass({
   },
   addElement(index) {
     this.firebaseRefs.element.child('elements').push({
-      title : "New Element",
+      title : null,
       index : index,
       importance : 1,
+      progress : null,
+      notes : '',
       elements : []
     });
   },
@@ -173,6 +175,7 @@ let TreeChart = React.createClass({
     let childElements = [];
 
     let focusedChild = self.props.focus ? self.props.focus() : self.focus();
+    let childIndex = 0;
 
     rows.forEach((row, rowIndex)=>{
       childElements.push(
@@ -209,8 +212,10 @@ let TreeChart = React.createClass({
             height={height}
             focus={self.props.focus || self.focus} // pass back focus
             focused={focusedChild && focusedChild.indexOf(path) === 0}
+            childIndex={childIndex}
             move={self.moveChild}
             remove={remove}/>);
+        childIndex += 1;
       });
     });
 
