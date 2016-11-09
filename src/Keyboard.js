@@ -3,6 +3,8 @@ let pressedEvents = [];
 let pressedKeys = '';
 
 document.body.addEventListener('keypress', function (e) {
+  //  only catch keypresses not in a box
+  if (e.target !== document.body) return;
   pressedKeys += e.key;
   let handlers = [];
   pressedEvents.forEach((pressHandlers)=>{
@@ -25,6 +27,9 @@ let onlyKeyDownKeys = {
 };
 
 document.body.addEventListener('keydown', function (e) {
+  //  only catch keypresses not in a box
+  if (e.target !== document.body) return;
+
   if (onlyKeyDownKeys[e.key]) {
     pressedKeys += e.key;
     let handlers = [];
