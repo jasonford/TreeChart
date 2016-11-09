@@ -99,3 +99,18 @@
 {
   padding : 0.25em 0.5em;
 }
+
+.TreeChartProgress
+{
+  max-height : 16px;
+  height : 1%;
+  background : rgba(0,0,0,0.1);
+  transition: height 0.3s;
+}
+
+.TreeChartProgressBar
+{
+  background : lime;
+  width : 0;
+  height : 100%;
+}

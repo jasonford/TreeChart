@@ -5,6 +5,7 @@ import BreadCrumbs from './BreadCrumbs.js';
 import TreeChartChild from './TreeChartChild.js';
 import TreeChartChildEditor from './TreeChartChildEditor.js';
 import makeRows from './makeRows.js';
+import averageChildProgress from './averageChildProgress.js';
 import Keyboard from './Keyboard.js';
 import './TreeChart.css';
 
@@ -69,6 +70,15 @@ let TreeChart = React.createClass({
 
     //  pressing first letter of 
     Keyboard.onPress('.', function (e) {
+      //  use for children w/o title
+      let childKeyToIndex = {};
+      Object
+        .values(self.state.element.elements || {})
+        .sort((a,b)=>{return a.index-b.index})
+        .forEach((child, index)=>{
+          childKeyToIndex[child.key] = index;
+        });
+
       let path;
       let focusedChild = self.props.focus ? self.props.focus() : self.focus();
       if (self.props.path === focusedChild) {
@@ -83,6 +93,10 @@ let TreeChart = React.createClass({
           Object.keys(self.state.element.elements || {}).forEach((key)=>{
             let element = self.state.element.elements[key];
             if (element.title && element.title.toLowerCase().indexOf(e.pressed.toLowerCase()) === 0) {
+              elementTitleMatches.push(key);
+            }
+            else if (childKeyToIndex[key] + 1 + '' === e.pressed) {
+              //  for children w/o title
               elementTitleMatches.push(key);
             }
           });
@@ -188,7 +202,9 @@ let TreeChart = React.createClass({
           self.removeChild(column.key);
         }
         let path = self.props.path + '/elements/' + column.key;
-        let visible = self.props.preview || focusedChild === self.props.path || focusedChild.indexOf(path) === 0; //  this one parent of focused child
+        let visible = self.props.preview //  this one is a preview
+                    || focusedChild === self.props.path //  this one is focused child
+                    || focusedChild.indexOf(path) === 0; //  this one is parent of focused child
 
         let height = row.height;
         if (focusedChild && focusedChild.indexOf(path) === 0) {
@@ -223,6 +239,24 @@ let TreeChart = React.createClass({
       self.setState({editing:false});
     }
 
+    let progress = this.state.element.progress;
+    let progressStyle = {};
+    let progressBarStyle = {};
+    let isAncestor = this.props.path.length < focusedChild.length;
+    let isFocused = this.props.path.length === focusedChild.length;
+
+    if (isFocused) {
+      //  returns null if no progress
+      progress = averageChildProgress(this.state.element);
+    }
+    
+    if (isNaN(progress) || isAncestor) {
+      progressStyle.display = 'none';
+    }
+    else {
+      progressBarStyle.width = progress+'%';
+    }
+
     return <div ref="root" className="TreeChart">
       <div className="TreeChartHeader">
         {this.props.isChild ? null : <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>}
@@ -230,6 +264,9 @@ let TreeChart = React.createClass({
       <div ref="children" className="TreeChartChildren">
         {this.state.editing && !this.props.preview ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
         {childElements}
+      </div>
+      <div ref="progress" className="TreeChartProgress" style={progressStyle}>
+        <div ref="progressBar" className="TreeChartProgressBar" style={progressBarStyle}></div>
       </div>
     </div>;
   }

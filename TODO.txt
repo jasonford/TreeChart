@@ -9,9 +9,9 @@ X child types preview renderings
 
 
 order from below:
-  progress metadata
-  note metadata
+X progress metadata
   email auth user
+  note metadata
   username reachable from typing into homescreen
 
 Metadata for each node:
@@ -29,6 +29,8 @@ Core ideas:
 
 
 Important UI Features:
+X progress bar for progress
+  progress bar for parent of elements with progress defined is average of all elements with progress
   visual feedback for add right/left, edit and drag into
   move elements between levels of hierarchy
     dropping in middle of child copies element into that element

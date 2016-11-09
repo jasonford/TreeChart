@@ -36,15 +36,15 @@ let TreeChartChildEditor = React.createClass({
         value = validate(value);
       }
       update[field] = value;
+      that.setState({'element.title' : value});
       firebase.database().ref(that.props.path).update(update);
     }
   },
   render() {
     let progressEnabled = this.state.element.progress === 0 || this.state.element.progress > 0;
-    let progressBar = <div>
-      <input type="range" onChange={this.update('progress', parseInt)} value={this.state.element.progress}/>
-      {this.state.element.progress}
-    </div>
+    let progressBar = <span>
+      <input type="range" onChange={this.update('progress', parseInt)} value={this.state.element.progress}/>{this.state.element.progress}
+    </span>
     return <div ref="root" className="TreeChartChildEditor">
       <input type="text" className="TreeChartChildEditorTitle" value={this.state.element.title} onChange={this.update('title')}/>
       <select className="TreeChartChildEditorImportance" default={this.state.element.importance} value={this.state.element.importance} onChange={this.update('importance', parseInt)}>
@@ -57,11 +57,13 @@ let TreeChartChildEditor = React.createClass({
         onChange={this.update('type')}>
         {types.map((type)=>{return <option key={type} value={type}>{type}</option>})}
       </select>
-      <input
-        type="checkbox"
-        checked={progressEnabled}
-        onChange={this.update('progress', (val)=>{return val ? 0 : null})}/>
-      {progressEnabled ? progressBar : null}
+      <div>
+       <input
+          type="checkbox"
+          checked={progressEnabled}
+          onChange={this.update('progress', (val)=>{return val ? 0 : null})}/>
+        {progressEnabled ? progressBar : null}
+      </div>
     </div>;
   }
 });
