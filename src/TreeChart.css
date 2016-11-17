@@ -8,7 +8,7 @@
   right : 0;
   bottom : 0;
   overflow: hidden;
-  background: rgba(128,128,128,0.05);
+  background: white;
   color : #444444;
   font-family: Helvetica, sans-serif;
 }
@@ -19,7 +19,11 @@
   display : flex;
   flex-flow: row;
   justify-content: space-between;
+  box-shadow: 0px 0px 5px #888888;
+  background: white;
+  z-index: 1;
 }
+
 
 .TreeChartChildren
 {
@@ -40,7 +44,6 @@
   min-width : 1px;
   position: relative;
   overflow: hidden;
-  background: rgba(128,128,128,0.01);
 }
 
 .TreeChartRowDivider
@@ -53,6 +56,7 @@
 .TreeChartChild
 {
   transition: flex-grow 0.3s, height 0.3s;
+  background : white;
 }
 
 .TreeChartChildInner,
@@ -67,14 +71,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background : #EEEEEE;
 }
 
-.TreeChartChildTitle.Top { top : 0;}
-.TreeChartChildTitle.Left { left : 0;}
-.TreeChartChildTitle.Right { right : 0; }
-.TreeChartChildTitle.Bottom { bottom : 0; }
+.TreeChartChildInner.Top { top : 0;}
+.TreeChartChildInner.Left { left : 0;}
+.TreeChartChildInner.Right { right : 0; }
+.TreeChartChildInner.Bottom { bottom : 0; }
 
-.TreeChartChildTitle
+.TreeChartChildInner
 {
   left : 1px;
   top : 1px;

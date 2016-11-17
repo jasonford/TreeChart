@@ -12,15 +12,13 @@ order from below:
 X progress metadata
 X email user auth
 X typing outside of input selects child in current view that starts with that title
-  sensible rendering of progress (child progress takes presidence over own reported progress)
-    different color for own progress and show blocks for combined progress??
   user root nodes
   note metadata
   visual feedback for add right/left, edit and drag into
   move elements between levels of hierarchy
     dropping in middle of child copies element into that element
     dropping on a breadcrumb copies dropped element into that parent (or copies within current)
-
+  types
 
 Metadata for each node:
 X title

@@ -2,17 +2,12 @@ import React from 'react';
 import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 
-let types = ['none', 'TreeChart', 'Progress', 'Link', 'HTML'];
+let types = ['TreeChart', 'Task', 'Link', 'HTML'];
 
 let TreeChartChildEditor = React.createClass({
   mixins : [ReactFireMixin],
   componentWillMount() {
-    this.setState({
-      path : this.props.path,
-      element : {
-        importance : 0
-      }
-    });
+    this.setState({path : this.props.path});
     let ref = firebase.database().ref(this.props.path).orderByChild("index");
     this.bindAsObject(ref, "element");
   },
@@ -41,10 +36,6 @@ let TreeChartChildEditor = React.createClass({
     }
   },
   render() {
-    let progressEnabled = this.state.element.progress === 0 || this.state.element.progress > 0;
-    let progressBar = <span>
-      <input type="range" onChange={this.update('progress', parseInt)} value={this.state.element.progress}/>{this.state.element.progress}
-    </span>
     return <div ref="root" className="TreeChartChildEditor">
       <input type="text" className="TreeChartChildEditorTitle" value={this.state.element.title} onChange={this.update('title')}/>
       <select className="TreeChartChildEditorImportance" default={this.state.element.importance} value={this.state.element.importance} onChange={this.update('importance', parseInt)}>
@@ -57,13 +48,6 @@ let TreeChartChildEditor = React.createClass({
         onChange={this.update('type')}>
         {types.map((type)=>{return <option key={type} value={type}>{type}</option>})}
       </select>
-      <div>
-       <input
-          type="checkbox"
-          checked={progressEnabled}
-          onChange={this.update('progress', (val)=>{return val ? 0 : null})}/>
-        {progressEnabled ? progressBar : null}
-      </div>
     </div>;
   }
 });

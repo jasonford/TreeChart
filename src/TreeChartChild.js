@@ -79,27 +79,15 @@ let TreeChartChild = React.createClass({
       };
     }
 
-    let titleClasses = "TreeChartChildTitle";
-    if (this.props.location.top   ) titleClasses += " Top";
-    if (this.props.location.left  ) titleClasses += " Left";
-    if (this.props.location.right ) titleClasses += " Right";
-    if (this.props.location.bottom) titleClasses += " Bottom";
-
-    let content;
-    if (this.props.focused) {
-      content = <div className={titleClasses}>
-        <TreeChart path={this.props.path} isChild={true} focus={this.props.focus} depth={this.props.depth} />
-      </div>
-    }
-    else {
-      content = <div className={titleClasses}>
-        <TreeChart path={this.props.path} preview={true} isChild={true} focus={this.props.focus} depth={this.props.depth}/>
-      </div>
-    }
+    let innerClasses = "TreeChartChildInner";
+    if (this.props.location.top   ) innerClasses += " Top";
+    if (this.props.location.left  ) innerClasses += " Left";
+    if (this.props.location.right ) innerClasses += " Right";
+    if (this.props.location.bottom) innerClasses += " Bottom";
 
     return <div ref="root" className="TreeChartChild" style={style}>
-      <div className="TreeChartChildInner">
-        {content}
+      <div className={innerClasses}>
+        <TreeChart path={this.props.path} preview={!this.props.focused} isChild={true} focus={this.props.focus} depth={this.props.depth}/>
         {this.props.focused || this.props.preview ? null : <div className="TreeChartChildTitle">{this.state.element.title || this.props.childIndex+1}</div>}
       </div>
     </div>
