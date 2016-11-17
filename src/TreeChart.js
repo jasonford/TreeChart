@@ -5,7 +5,6 @@ import BreadCrumbs from './BreadCrumbs.js';
 import TreeChartChild from './TreeChartChild.js';
 import TreeChartChildEditor from './TreeChartChildEditor.js';
 import makeRows from './makeRows.js';
-import childProgress from './childProgress.js';
 import Keyboard from './Keyboard.js';
 import './TreeChart.css';
 import LoginTag from './LoginTag.js';
@@ -241,20 +240,6 @@ let TreeChart = React.createClass({
       self.setState({editing:false});
     }
 
-    let progress = this.state.element.progress;
-    let progressBarStyle = {};
-
-    let depth = this.depth();
-    if (depth === 0 || depth === 1) {
-      progressBarStyle.height = '16px';
-      // TODO: if has progress , show that at the bottom
-      //       otherwise show child progress in chunks at the bottom
-      //  if no progress or child progress, ignore this progress bar
-    }
-    else {
-      progressBarStyle.height = 0;
-    }
-
     let header = <div className="TreeChartHeader">
       <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>
       <div className="TreeChartLogin">
@@ -268,9 +253,46 @@ let TreeChart = React.createClass({
         {this.state.editing && !this.props.preview ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
         {childElements}
       </div>
-      <div ref="progressBar" className="TreeChartProgressBar" style={progressBarStyle} key={this.state.element.key}></div>
+      <ProgressBar path={this.props.path} depth={this.depth()}/>
     </div>;
   }
 });
+
+
+
+let ProgressBar = React.createClass({
+  mixins : [ReactFireMixin],
+  componentWillMount() {
+    this.setState({
+      path : this.props.path,
+      focus : this.props.path,
+      element : { // start with empty element designed to show loading
+        elements : {}
+      }
+    });
+    let ref = firebase.database().ref(this.props.path);
+    this.bindAsObject(ref, "element");
+  },
+  render() {
+    let parts = [];
+    if (!isNaN(this.state.element.progress)) {
+      let style = {
+        width : this.state.element.progress + '%'
+      };
+      parts.push(<div className="TreeChartProgressBarPart" style={style} key={this.props.path}></div>)
+    }
+    else {
+
+    }
+    let style = {
+      height : this.props.depth === 0 || this.props.depth === 1 ? '16px' : 0
+    };
+    return <div ref="progressBar" style={style} className="TreeChartProgressBar" key={this.props.path}>
+      {parts}
+    </div>
+  }
+});
+
+
 
 export default TreeChart;
