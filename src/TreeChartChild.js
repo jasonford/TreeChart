@@ -88,12 +88,12 @@ let TreeChartChild = React.createClass({
     let content;
     if (this.props.focused) {
       content = <div className={titleClasses}>
-        <TreeChart path={this.props.path} isChild={true} focus={this.props.focus} />
+        <TreeChart path={this.props.path} isChild={true} focus={this.props.focus} depth={this.props.depth} />
       </div>
     }
     else {
       content = <div className={titleClasses}>
-        <TreeChart path={this.props.path} preview={true} isChild={true} focus={this.props.focus} />
+        <TreeChart path={this.props.path} preview={true} isChild={true} focus={this.props.focus} depth={this.props.depth}/>
       </div>
     }
 

@@ -16,6 +16,9 @@
 .TreeChartHeader
 {
   flex-grow: 0;
+  display : flex;
+  flex-flow: row;
+  justify-content: space-between;
 }
 
 .TreeChartChildren
@@ -97,20 +100,14 @@
 
 .BreadCrumbs
 {
-  padding : 0.25em 0.5em;
+  display: inline;
 }
 
-.TreeChartProgress
-{
-  max-height : 16px;
-  height : 1%;
-  background : rgba(0,0,0,0.1);
-  transition: height 0.3s;
-}
 
 .TreeChartProgressBar
 {
+  background : rgba(0,0,0,0.1);
+  transition: height 0.3s;
   background : lime;
   width : 0;
-  height : 100%;
 }

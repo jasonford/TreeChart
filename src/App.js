@@ -3,7 +3,7 @@ import TreeChart from './TreeChart.js';
 
 let App = React.createClass({
   render() {
-    return <TreeChart path="/"/>;
+    return <TreeChart path='/root'/>;
   }
 })
 

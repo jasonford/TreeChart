@@ -10,15 +10,24 @@ X child types preview renderings
 
 order from below:
 X progress metadata
-  email auth user
+X email user auth
+X typing outside of input selects child in current view that starts with that title
+  sensible rendering of progress (child progress takes presidence over own reported progress)
+    different color for own progress and show blocks for combined progress??
+  user root nodes
   note metadata
-  username reachable from typing into homescreen
+  visual feedback for add right/left, edit and drag into
+  move elements between levels of hierarchy
+    dropping in middle of child copies element into that element
+    dropping on a breadcrumb copies dropped element into that parent (or copies within current)
+
 
 Metadata for each node:
 X title
 X importance
 X type
-  progress
+X progress
+  owner
   notes
 
 
@@ -28,24 +37,11 @@ Core ideas:
   get graph view of everything an element has been copied into
 
 
-Important UI Features:
-X progress bar for progress
-  progress bar for parent of elements with progress defined is average of all elements with progress
-  visual feedback for add right/left, edit and drag into
-  move elements between levels of hierarchy
-    dropping in middle of child copies element into that element
-    dropping on a breadcrumb copies dropped element into that parent (or copies within current)
-  styling
-
-
 Importance UX Features:
   removing adds elements to removed stack
   touch screen support
 
-
 Nice features:
-  typing outside of input selects child in current view that starts with that title
-  home page is just alphabet tree to usernames
   animate all child transitions
     remember screen locations and dimensions of child elements elements before DOM update
     just after DOM update, apply dimensions and locations
@@ -57,6 +53,7 @@ X TreeChart
   Create your own child type to use (need a good interface)
     - accepted child types can be used by anyone!  HTML
   Link -> opens in another frame after animating open
+  markdown (with katex plugin)
   Copy
   Access
 

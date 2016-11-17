@@ -5,9 +5,10 @@ import BreadCrumbs from './BreadCrumbs.js';
 import TreeChartChild from './TreeChartChild.js';
 import TreeChartChildEditor from './TreeChartChildEditor.js';
 import makeRows from './makeRows.js';
-import averageChildProgress from './averageChildProgress.js';
+import childProgress from './childProgress.js';
 import Keyboard from './Keyboard.js';
 import './TreeChart.css';
+import LoginTag from './LoginTag.js';
 
 let TreeChart = React.createClass({
   mixins : [ReactFireMixin],
@@ -166,11 +167,12 @@ let TreeChart = React.createClass({
     firebase.database().ref(this.props.path + '/elements/' + key).remove();
   },
   focus(path) {
-    if (path) {
-      if (path === '//') path = '/';
-      this.setState({focus : path});
-    }
-    return this.state.focus;
+    if (path) { this.setState({focus : path}); }
+    return this.props.focus ? this.props.focus() : this.state.focus;
+  },
+  depth() {
+    //  will give current depth ralative to focused path
+    return (this.props.path.split('/').length - this.focus().split('/').length)/2;
   },
   render() {
     let self = this;
@@ -188,7 +190,7 @@ let TreeChart = React.createClass({
 
     let childElements = [];
 
-    let focusedChild = self.props.focus ? self.props.focus() : self.focus();
+    let focusedChild = self.focus();
     let childIndex = 0;
 
     rows.forEach((row, rowIndex)=>{
@@ -240,34 +242,33 @@ let TreeChart = React.createClass({
     }
 
     let progress = this.state.element.progress;
-    let progressStyle = {};
     let progressBarStyle = {};
-    let isAncestor = this.props.path.length < focusedChild.length;
-    let isFocused = this.props.path.length === focusedChild.length;
 
-    if (isFocused) {
-      //  returns null if no progress
-      progress = averageChildProgress(this.state.element);
-    }
-    
-    if (isNaN(progress) || isAncestor) {
-      progressStyle.display = 'none';
+    let depth = this.depth();
+    if (depth === 0 || depth === 1) {
+      progressBarStyle.height = '16px';
+      // TODO: if has progress , show that at the bottom
+      //       otherwise show child progress in chunks at the bottom
+      //  if no progress or child progress, ignore this progress bar
     }
     else {
-      progressBarStyle.width = progress+'%';
+      progressBarStyle.height = 0;
     }
 
-    return <div ref="root" className="TreeChart">
-      <div className="TreeChartHeader">
-        {this.props.isChild ? null : <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>}
+    let header = <div className="TreeChartHeader">
+      <BreadCrumbs focus={this.focus} path={this.state.focus || this.state.path}/>
+      <div className="TreeChartLogin">
+        <LoginTag />
       </div>
+    </div>
+
+    return <div ref="root" className="TreeChart">
+      {this.props.isChild ? null : header}
       <div ref="children" className="TreeChartChildren">
         {this.state.editing && !this.props.preview ? <TreeChartChildEditor path={this.state.editing} remove={stopEditing}/> : null}
         {childElements}
       </div>
-      <div ref="progress" className="TreeChartProgress" style={progressStyle}>
-        <div ref="progressBar" className="TreeChartProgressBar" style={progressBarStyle}></div>
-      </div>
+      <div ref="progressBar" className="TreeChartProgressBar" style={progressBarStyle} key={this.state.element.key}></div>
     </div>;
   }
 });
