@@ -8,7 +8,7 @@
   right : 0;
   bottom : 0;
   overflow: hidden;
-  background: white;
+  background: #EEEEEE;
   color : #444444;
   font-family: Helvetica, sans-serif;
 }
@@ -71,7 +71,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background : #EEEEEE;
 }
 
 .TreeChartChildInner.Top { top : 0;}
@@ -85,6 +84,7 @@
   top : 1px;
   bottom : 1px;
   right : 1px;
+  background : #888888;
 }
 
 .TreeChartChildEditor
@@ -106,21 +106,4 @@
 .BreadCrumbs
 {
   display: inline;
-}
-
-
-.TreeChartProgressBar
-{
-  width : 100%;
-  transition: height 0.3s;
-  height : 0;
-}
-
-.TreeChartProgressBarPart
-{
-  background : rgba(0,0,0,0.1);
-  background : lime;
-  transition: height 0.1s;
-  height : 100%;
-  width : 0;
 }

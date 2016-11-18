@@ -12,8 +12,9 @@ order from below:
 X progress metadata
 X email user auth
 X typing outside of input selects child in current view that starts with that title
-  user root nodes
-  note metadata
+X user root nodes
+X breadcrumbs using user root node
+  comment metadata (open to all users)
   visual feedback for add right/left, edit and drag into
   move elements between levels of hierarchy
     dropping in middle of child copies element into that element

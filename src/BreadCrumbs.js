@@ -3,10 +3,21 @@ import firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 
 let BreadCrumbs = React.createClass({
+  componentWillMount() {
+    let self = this;
+    self.setState({user : false});
+    firebase.auth().onAuthStateChanged((user)=>{
+      self.setState({user : user});
+    });
+  },
   render() {
-    let crumbs = [<BreadCrumb key='/root' path='/root' root={true} focus={this.props.focus}/>];
+    let userRoot = '/elements/';
+    if (this.state.user) {
+      userRoot = '/elements/'+this.state.user.uid;
+    }
+    let crumbs = [<BreadCrumb key={userRoot} path={userRoot} root={true} focus={this.props.focus}/>];
     let pathParts = this.props.path.replace(/^\/+|\/+$/, '').split('/');
-    for (let i=1; i<pathParts.length-1; i+=2) {
+    for (let i=2; i<pathParts.length-1; i+=2) {
       let currentPath = '/'+pathParts.slice(0, i+2).join('/');
       crumbs.push(<BreadCrumb key={currentPath} path={currentPath} focus={this.props.focus}/>);
     }
@@ -28,9 +39,6 @@ let BreadCrumb = React.createClass({
     });
   },
   render() {
-    if (this.props.root) {
-      return <span ref="root">{this.state.element ? this.state.element.owner : ''}</span>
-    }
     return <span ref="root">/{this.state.element ? this.state.element.title || 'untitled' : ''}</span>;
   }
 })
