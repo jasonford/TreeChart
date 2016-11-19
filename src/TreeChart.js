@@ -231,6 +231,7 @@ let TreeChart = React.createClass({
             focused={focusedChild && focusedChild.indexOf(path) === 0}
             childIndex={childIndex}
             move={self.moveChild}
+            depth={self.depth()}
             remove={remove}/>);
 
         childIndex += 1;

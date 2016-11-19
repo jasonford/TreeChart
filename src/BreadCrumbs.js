@@ -28,9 +28,13 @@ let BreadCrumbs = React.createClass({
 let BreadCrumb = React.createClass({
   mixins : [ReactFireMixin],
   componentWillMount() {
-    this.setState({});
+    let self = this;
+    self.setState({user : false});
     let ref = firebase.database().ref(this.props.path).orderByChild("index");
     this.bindAsObject(ref, "element");
+    firebase.auth().onAuthStateChanged((user)=>{
+      self.setState({user : user});
+    });
   },
   componentDidMount: function () {
     let self = this;
@@ -39,7 +43,16 @@ let BreadCrumb = React.createClass({
     });
   },
   render() {
-    return <span ref="root">/{this.state.element ? this.state.element.title || 'untitled' : ''}</span>;
+    let title = '/' + (this.state.element ? this.state.element.title || 'untitled' : '');
+    if (this.props.root) {
+      if (this.state.user) {
+        title = this.state.user.displayName || this.state.user.email;
+      }
+      else {
+        title = 'anonymous';
+      }
+    }
+    return <span ref="root">{title}</span>;
   }
 })
 

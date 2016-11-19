@@ -32,8 +32,8 @@ let TreeChartChild = React.createClass({
     this.refs.root.addEventListener("dragone", (event)=>{
       event.stopPropagation();
       if (self.props.focused) return;
-      self.refs.root.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)';
-      self.refs.root.style.zIndex = 1;
+      self.refs.inner.style.transform = 'translate(' + event.tx + 'px,'+ event.ty + 'px)';
+      self.refs.root.classList.add('dragging');
     });
     this.refs.root.addEventListener("tap", (event)=>{
       event.stopPropagation();
@@ -41,8 +41,8 @@ let TreeChartChild = React.createClass({
     });
     this.refs.root.addEventListener("drop", (event)=>{
       event.stopPropagation();
-      self.refs.root.style.transform = 'translate(0px,0px)';
-      self.refs.root.style.zIndex = 0;
+      self.refs.inner.style.transform = 'translate(0px,0px)';
+      self.refs.root.classList.remove('dragging');
       //  TODO: high velocity off edge should trigger remove too
       if (event.x > window.innerWidth
       ||  event.y > window.innerHeight
@@ -85,10 +85,15 @@ let TreeChartChild = React.createClass({
     if (this.props.location.right ) innerClasses += " Right";
     if (this.props.location.bottom) innerClasses += " Bottom";
 
+    let titleClass = "TreeChartChildTitle Fadable";
+    if (this.props.focused || this.props.preview || this.props.depth < 0) {
+      titleClass += " NoInteract";
+    }
+
     return <div ref="root" className="TreeChartChild" style={style}>
-      <div className={innerClasses}>
+      <div className={innerClasses} ref="inner">
         <TreeChart path={this.props.path} preview={!this.props.focused} isChild={true} focus={this.props.focus} depth={this.props.depth}/>
-        {this.props.focused || this.props.preview ? null : <div className="TreeChartChildTitle">{this.state.element.title || this.props.childIndex+1}</div>}
+        <div className={titleClass}>{this.state.element.title || this.props.childIndex+1}</div>
       </div>
     </div>
   }

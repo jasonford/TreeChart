@@ -87,10 +87,6 @@ let TreeChart = React.createClass({
     let userInfoStyle = {
       display : this.state.user ? null : 'none',
     };
-    let username = 'Anonymous';
-    if (this.state.user) {
-      username = this.state.user.displayName || this.state.user.email;
-    }
     return <div className="LoginTag">
       <div style={loginFormStyle}>
         <input style={loginEmailStyle} disabled={signingIn} type="text" placeholder="email" ref="email"/>
@@ -98,7 +94,6 @@ let TreeChart = React.createClass({
         <button ref="signIn" disabled={signingIn}>sign in/up</button>
       </div>
       <div style={userInfoStyle}>
-        <span>{username}</span>
         <button className="LoginTagSignOut" ref="signOut">sign out</button>
       </div>
     </div>
